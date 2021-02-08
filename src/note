@@ -1,0 +1,5 @@
+# 2021.02.06 00:58:58
+# router/index.js  和  store/index.js里设置侧边菜单的路由
+# 现在已经将index.vue中的instance变量export出来，其他地方可用调用index.vue中的方法，如gotepage，跳转页面
+# permiss.js中定义了如果有adminVerifyCode本地缓存将会自动路由到home页面，没有路由到login页面
+# 设置adminVerifyCode本地缓存后，以后每一次请求中都会自动带上Authorization请求头，内容就是adminVerifyCode
