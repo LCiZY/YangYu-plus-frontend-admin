@@ -44,6 +44,7 @@ module.exports = {
         'object-curly-newline': 'off',
         'default-case': 'off',
         'import/no-dynamic-require': 'off',
+        'vue/no-parsing-error': [2, { "x-invalid-end-tag": false }],
     },
     parserOptions: {
         parser: 'babel-eslint',

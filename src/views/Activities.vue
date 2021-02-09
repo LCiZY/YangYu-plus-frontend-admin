@@ -2,8 +2,10 @@
     <div style="padding: 10px;overflow: scroll; max-height: calc(100vh - 88px);" id="activity">
         <div style="background: #fff; border-radius: 8px; padding: 20px;">
             <div class="query-c">
-                查询：
-                <Input search placeholder="请输入查询内容" style="width: auto" />
+                <Select v-model="searchType" style="width:180px;margin-right:10px;" @on-change="changeSearchType">
+                    <Option v-for="item in searchTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+                <Input suffix="ios-search" placeholder="请输入查询内容"  v-model="searchContent" style="width: auto" />
                 <Button type="primary" @click="search" class="margin-left">确定</Button>
                 <Button type="primary" :loading="tableDataLoading" @click="refresh"  class="margin-left">
                     <span v-if="!tableDataLoading">刷新</span>
@@ -101,18 +103,77 @@
                 <Split v-model="updateSplitLeft">
                     <div slot="left" class="demo-split-pane" style="height: 100%;">
                         <Card :bordered="false" >
-                            <h1>活动信息</h1>
-                            <h3>活动ID：{{ chooseActivity.activityId }}</h3>
-                            <h3>创建用户ID：{{ chooseActivity.userId }}</h3>
-                            <h3>创建商家ID：{{ chooseActivity.merchantId }}</h3>
-                            <h3>活动名称：{{ chooseActivity.activityName }}</h3>
-                            <h3>活动类型：{{ chooseActivity.activityType }}</h3>
-                            <h3>活动日期：{{ chooseActivity.activityDate }}</h3>
-                            <h3>活动地点：{{ chooseActivity.activityPlace }}</h3>
-                            <h3>活动对象：{{ chooseActivity.activityObject }}</h3>
-                            <h3>活动人数：{{ chooseActivity.activityMembers }}</h3>
-                            <h3>活动平均花费：{{ chooseActivity.activityAverCost }}</h3>
-                            <h3>活动描述</h3><p>{{ chooseActivity.activityDesc }}</p>
+                            <Divider plain>活动信息</Divider>
+                            <Form :model="chooseActivity" :label-width="120">
+                                <Row>
+                                    <Col span="11">
+                                        <FormItem label="活动ID">
+                                            <Input v-model="chooseActivity.activityId" disabled/>
+                                        </FormItem>
+                                    </Col>
+                                    <Col span="11">
+                                        <FormItem label="用户ID" v-if="chooseActivity.userId && chooseActivity.userId != ''">
+                                            <Input v-model="chooseActivity.userId" disabled/>
+                                        </FormItem>
+                                        <FormItem label="商家ID" v-else-if="chooseActivity.merchantId && chooseActivity.merchantId != ''">
+                                            <Input v-model="chooseActivity.merchantId" disabled/>
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                        <Col span="11">
+                                            <FormItem label="活动名称">
+                                                <Input v-model="chooseActivity.activityName" placeholder="输入活动名称"/>
+                                            </FormItem>
+                                        </Col>
+                                        <Col span="11">
+                                            <FormItem label="活动类型">
+                                                <Input v-model="chooseActivity.activityType" placeholder="输入活动类型"/>
+                                            </FormItem>
+                                        </Col>
+                                </Row>
+                                <Row>
+                                        <Col span="11">
+                                            <FormItem label="活动日期" >
+                                                <DatePicker type="date" v-model="activityDateFromServer"
+                                                            format="yyyy-MM-dd" placeholder="选择活动日期" @on-change="selectDate"/>
+                                            </FormItem>
+                                        </Col>
+                                        <Col span="11">
+                                            <FormItem label="活动时间">
+                                                <TimePicker format="HH:mm" v-model="activityTime" :steps="[1, 15]" placeholder="选择时间"/>
+                                            </FormItem>
+                                        </Col>
+                                </Row>
+                                <Row>
+                                    <Col span="11">
+                                        <FormItem label="活动地点">
+                                            <Input v-model="chooseActivity.activityPlace" placeholder="输入活动地点"/>
+                                        </FormItem>
+                                    </Col>
+                                    <Col span="11">
+                                        <FormItem label="活动对象">
+                                            <Input v-model="chooseActivity.activityObject" placeholder="输入活动对象"/>
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col span="11">
+                                        <FormItem label="活动人数">
+                                            <Input v-model="chooseActivity.activityMembers" placeholder="输入活动人数"/>
+                                        </FormItem>
+                                    </Col>
+                                    <Col span="11">
+                                        <FormItem label="活动平均花费">
+                                            <Input v-model="chooseActivity.activityAverCost" placeholder="输入活动平均花费"/>
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                                <FormItem label="活动描述">
+                                    <Input v-model="chooseActivity.activityDesc" type="textarea"
+                                           placeholder="输入活动描述"/>
+                                </FormItem>
+                            </Form>
                         </Card>
                     </div>
                     <div slot="right" class="demo-split-pane no-padding" style="padding: 10px;">
@@ -185,6 +246,27 @@ export default {
     name: 'activityTable',
     data() {
         return {
+            searchContent: '',
+            searchType: 'id',
+            searchTypeList: [
+                {
+                    value: 'id',
+                    label: '根据活动id查询',
+                },
+                {
+                    value: 'name',
+                    label: '根据活动名称查询',
+                },
+                {
+                    value: 'type',
+                    label: '根据活动类型查询',
+                },
+            ],
+            searchResult: {
+                id: [],
+                name: [],
+                type: [],
+            },
             tableDataLoading: false,
             activityInfoModal: false, // 显示活动信息的模态框
             deleteModal: false, // 询问是否删除活动的模态框
@@ -200,6 +282,7 @@ export default {
             splitRight: 0.6, // 活动信息的模态框右半边宽度的初始比重
             updateSplitLeft: 0.7, // 更新活动信息的模态框左半边宽度的初始比重
             updateSplitRight: 0.3, // 活动信息的模态框右半边宽度的初始比重
+            whiteSpaces: '\u3000\u3000',
             columns: [ // 表头
                 {
                     title: '活动ID',
@@ -315,6 +398,9 @@ export default {
                                     this.activityImagesDeleted = []
                                     this.showFilesUrlList = []
                                     this.chooseActivity = params.row
+                                    this.activityDateFromServer = this.chooseActivity.activityDate.split(' ')[0]
+                                    this.activityTime = this.chooseActivity.activityDate.split(' ')[1]
+                                        ? this.chooseActivity.activityDate.split(' ')[1] : '09:30'
                                     this.updateModal = true
                                     this.coverPicFileUrl = this.chooseActivity.activityCoverPicUrl
                                     let i = 0
@@ -351,6 +437,9 @@ export default {
             activities: [ // 所有的活动，比如第一页在 activities[1] 里
             ],
             // 编辑页面选择附属图片部分所需变量
+            activityDateFromServer: null,
+            activityDate: null,
+            activityTime: null,
             activityImages: [], // 需要上传的新增加的活动图片
             activityCoverPic: null, // 活动封面图
             coverPicFileUrl: '', // 活动封面图的url
@@ -366,12 +455,61 @@ export default {
         this.showFilesUrlList = this.$refs.upload.fileList
     },
     methods: {
+        changeSearchType(value) {
+            this.activitiesDisplay = this.searchResult[value]
+        },
         search() { // 按类型搜索
-            instance.gotoPage('auditTable', {})
+            // instance.gotoPage('auditTable', {})
+            let self = this
+            self.tableDataLoading = true
+            if (this.searchType === 'id') { // 根据id查询活动
+                // eslint-disable-next-line radix
+                let id = parseInt(this.searchContent - 0)
+                // eslint-disable-next-line no-restricted-globals
+                if (isNaN(id)) return
+                get('/activity/queryActivityById', {
+                    params: { activityId: id },
+                }).then(res => {
+                    console.log(res)
+                    self.activitiesDisplay = [res]
+                    self.tableDataLoading = false
+                }).catch((error) => {
+                    console.log('查询失败')
+                    self.tableDataLoading = false
+                })
+                // eslint-disable-next-line no-empty
+            } else if (this.searchType === 'name') {
+                get('/activity/queryCompleteActivityByNameDescKeyword', {
+                    params: { keyword: this.searchContent, start: this.searchResult.name.length, number: 10 },
+                }).then(res => {
+                    self.searchResult.name = self.searchResult.name.concat(res)
+                    self.activitiesDisplay = self.searchResult.name
+                    self.tableDataLoading = false
+                }).catch((error) => {
+                    console.log('查询失败')
+                    self.tableDataLoading = false
+                })
+            } else if (this.searchType === 'type') { // 根据类型查询queryActivityByType
+                get('/activity/queryCompleteActivityByType', {
+                    params: { activityType: this.searchContent, start: this.searchResult.type.length, number: 10 },
+                }).then(res => {
+                    self.searchResult.type = self.searchResult.type.concat(res)
+                    self.activitiesDisplay = self.searchResult.type
+                    self.tableDataLoading = false
+                }).catch((error) => {
+                    console.log('查询失败')
+                    self.tableDataLoading = false
+                })
+            }
         },
         refresh() { // 刷新本页面
             instance.reloadPage()
             this.toPage(this.currIndex)
+            this.searchResult = {
+                id: [],
+                name: [],
+                type: [],
+            }
         },
         toPage(index) { // 查看第 index 页的活动 index=1，2，3。。
             this.currIndex = index
@@ -433,11 +571,56 @@ export default {
             })
         },
         updateActivity() { // 上传修改至服务器
+            let self = this
+            this.updateLoading = true
+            let form = new FormData()
+            if (this.chooseActivity.userId) { form.append('userId', this.chooseActivity.userId) }
+            if (this.chooseActivity.merchantId) { form.append('merchantId', this.chooseActivity.merchantId) }
+            form.append('activityId', this.chooseActivity.activityId)
+            form.append('activityName', this.chooseActivity.activityName)
+            form.append('activityType', this.chooseActivity.activityType)
+            form.append('activityDate', this.activityDate + ' ' + this.activityTime)
+            form.append('activityPlace', this.chooseActivity.activityPlace)
+            form.append('activityObject', this.chooseActivity.activityObject)
+            form.append('activityMembers', this.chooseActivity.activityMembers)
+            form.append('activityAverCost', this.chooseActivity.activityAverCost)
+            form.append('activityDesc', this.chooseActivity.activityDesc)
+            if (this.activityCoverPic) { form.append('activityCoverPic', this.activityCoverPic, this.activityCoverPic.name) }
+            if (this.activityImages.length !== 0) {
+                this.activityImages.forEach(element => {
+                    form.append('activityImages', element)
+                })
+            }
+            if (this.activityImagesDeleted.length !== 0) {
+                this.activityImagesDeleted.forEach(element => {
+                    form.append('activityImagesDeleted', element)
+                })
+            }
+            post('/activity/updateActivity', form, { headers: { 'Content-Type': 'multipart/form-data' },
+            }).then(res => {
+                console.log('更改活动信息：' + res)
+                if (res && res !== 'fail') {
+                    self.updateModal = false
+                    self.$Notice.success({
+                        title: '更改活动信息成功',
+                    })
+                }
+                self.updateLoading = false
+            }).catch((error) => {
+                console.log('更改活动信息失败')
+                self.$Notice.error({
+                    title: '更改活动信息失败',
+                })
+                self.updateLoading = false
+            })
         },
         closeModal() {
             this.activityInfoModal = false
             this.deleteModal = false
             this.updateModal = false
+        },
+        selectDate(date) {
+            this.activityDate = date
         },
         show(index) { // 显示调试信息，测试用
             this.$Modal.info({
