@@ -12,7 +12,6 @@
                 <p class="error">{{pwdError}}</p>
             </div>
             <Button :loading="isShowLoading" class="submit" type="primary" @click="submit">登陆</Button>
-            <p class="account"><span @click="register">注册账号</span> | <span @click="forgetPwd">忘记密码</span></p>
         </div>
     </div>
 </template>
@@ -25,8 +24,9 @@ export default {
     name: 'login',
     data() {
         return {
-            account: '19927522531',
-            pwd: 'admin14433',
+            account: '',
+            pwd: '',
+            adminInfo: {},
             accountError: '',
             pwdError: '',
             isShowLoading: false,
@@ -75,9 +75,11 @@ export default {
                     get('admin/queryAdminById', {
                         params: { adminId: self.account },
                     }).then(res1 => {
-                        this.userInfo = JSON.stringify(res1, null, 4)
+                        this.adminInfo = res1
                         // 登陆成功 设置用户信息
                         console.log('res1:' + res1)
+                        localStorage.setItem('adminInfo', JSON.stringify(res1, null, 4))
+                        localStorage.setItem('adminId', res1.adminId)
                         localStorage.setItem('adminName', res1.adminName)
                         localStorage.setItem('adminStatus', res1.adminStatus)
                         // eslint-disable-next-line max-len

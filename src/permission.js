@@ -8,6 +8,9 @@ import { getDocumentTitle, resetTokenAndClearUser } from './utils'
 let hasMenus = false
 router.beforeEach(async (to, from, next) => {
     document.title = getDocumentTitle(to.meta.title)
+    if (to.path === '/' || to.path === '/index') {
+        document.title = '软件工程方法学习笔记'
+    }
     LoadingBar.start()
     if (localStorage.getItem('adminVerifyCode')) {
         if (to.path === '/login') {
@@ -34,6 +37,7 @@ router.beforeEach(async (to, from, next) => {
         if (to.path === '/login') {
             next()
         } else if (to.path === '/' || to.path === '/index') {
+            document.title = '软件工程方法学习笔记'
             next()
         } else {
             next(`/login?redirect=${to.path}`)

@@ -3,9 +3,12 @@ import { Message } from 'view-design'
 import router from '@/router'
 import { showLoading, closeLoading } from '@/utils/loading'
 import { resetTokenAndClearUser } from '@/utils'
+import { isLocalIp } from '@/utils/getInfo'
 
+
+const serverUrl = 'https://www.mumuzi.site:8443'
 const service = axios.create({
-    baseURL: window.location.origin,
+    baseURL: isLocalIp(window.location.origin) ? window.location.origin : serverUrl,
     timeout: 60000,
 })
 

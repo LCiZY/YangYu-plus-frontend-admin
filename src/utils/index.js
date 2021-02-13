@@ -9,7 +9,7 @@ export function resetTokenAndClearUser() {
     resetRouter()
 }
 
-export const defaultDocumentTitle = 'vue-admin-template'
+export const defaultDocumentTitle = 'YangYu'
 export function getDocumentTitle(pageTitle) {
     if (pageTitle) return `${defaultDocumentTitle} - ${pageTitle}`
     return `${defaultDocumentTitle}`

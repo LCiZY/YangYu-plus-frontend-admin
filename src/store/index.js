@@ -14,25 +14,19 @@ const store = new Vuex.Store({
                 type: 'md-home', // icon类型
                 text: '主页', // 文本内容
             },
-            {
-                name: 'other', // 要跳转的路由名称 不是路径
-                size: 18, // icon大小
-                type: 'ios-egg-outline', // icon类型
-                text: '单独的路由', // 点击侧边栏跳到一个单独的路由页面，需要提前在 router.js 定义
-            },
-            {
-                name: 'other1', // 要跳转的路由名称 不是路径
-                size: 18, // icon大小
-                type: 'ios-egg-outline', // icon类型
-                text: '单独的路由111', // 点击侧边栏跳到一个单独的路由页面，需要提前在 router.js 定义
-            },
-            {
-                size: 18, // icon大小
-                type: 'md-arrow-forward', // icon类型
-                text: '外链',
-                url: 'https://www.baidu.com',
-                isExternal: true, // 外链 跳到一个外部的 URL 页面
-            },
+            // {
+            //     name: 'other', // 要跳转的路由名称 不是路径
+            //     size: 18, // icon大小
+            //     type: 'ios-egg-outline', // icon类型
+            //     text: '单独的路由', // 点击侧边栏跳到一个单独的路由页面，需要提前在 router.js 定义
+            // },
+            // {
+            //     size: 18, // icon大小
+            //     type: 'md-arrow-forward', // icon类型
+            //     text: '外链',
+            //     url: 'https://www.baidu.com',
+            //     isExternal: true, // 外链 跳到一个外部的 URL 页面
+            // },
             {
                 text: '活动管理',
                 type: 'ios-paper',
@@ -53,6 +47,29 @@ const store = new Vuex.Store({
                         type: 'ios-grid',
                         text: '活动审核',
                         name: 'auditTable',
+                    },
+                ],
+            },
+            {
+                text: '课程管理(待)',
+                type: 'ios-paper',
+                children: [
+                    {
+                        type: 'ios-grid',
+                        name: 'courseTable',
+                        text: '课程查询',
+                        // hidden 属性 隐藏此菜单 可以通过在地址栏上输入对应的 URL 来显示页面
+                        // hidden: true,
+                    },
+                    {
+                        type: 'ios-grid',
+                        name: 'preCourseTable',
+                        text: 'Pre课程查询',
+                    },
+                    {
+                        type: 'ios-grid',
+                        name: 'auditCourseTable',
+                        text: '课程审核',
                     },
                     {
                         text: '三级菜单',

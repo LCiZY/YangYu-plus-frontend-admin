@@ -95,7 +95,8 @@
                         </div>
                         <!-- 用户头像 -->
                         <div class="user-img-c">
-                            <img :src="userImg">
+<!--                            <img :src="userImg">-->
+                            <Avatar :style="{background: avatarColor}">{{ userName }}</Avatar>
                         </div>
                         <!-- 下拉菜单 -->
                         <Dropdown trigger="click" @on-click="userOperate" @on-visible-change="showArrow">
@@ -157,6 +158,7 @@
 <script>
 import { resetTokenAndClearUser } from '../utils'
 import { fetchUserData, get, post } from '@/api'
+import { randomNum } from '../utils/getInfo'
 
 // eslint-disable-next-line import/no-mutable-exports
 let instance = null
@@ -169,6 +171,7 @@ export default {
             paths: {},
             // 当前显示页面
             currentPage: '',
+            avatarColor: '#7265e6',
             openMenus: [], // 要打开的菜单名字 name属性
             menuCache: [], // 缓存已经打开的菜单
             hasNewMsg: true, // 是否有新消息
@@ -201,6 +204,9 @@ export default {
             text: this.nameToTitle[name],
             name,
         })
+        const ColorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae']
+        // 随机生成头像背景颜色
+        this.avatarColor = ColorList[randomNum(0, 100) % ColorList.length]
 
         // 获取待审核请求数量
         this.getMsgCount()
@@ -492,7 +498,7 @@ export default {
                         on: {
                             click() {
                                 // 点击查看跳转到消息页
-                                self.gotoPage('msg')
+                                self.gotoPage('auditTable')
                                 self.hasNewMsg = false
                                 self.msgNum = 0
                             },
@@ -526,6 +532,9 @@ export default {
             }).catch((error) => {
                 console.log('获取审核请求失败')
             })
+        },
+        updateUserName(name) {
+            this.userName = name
         },
     },
 }
@@ -697,6 +706,7 @@ a {
     position: relative;
     height: 100%;
     overflow: hidden;
+    background:#eee;
 }
 
 .pointer {

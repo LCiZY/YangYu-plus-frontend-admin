@@ -6,9 +6,9 @@ Vue.use(Router)
 const commonRoutes = [
     {
         path: '/',
-        name: 'fakeIndex',
+        name: 'indexMain',
         meta: { title: '首页' },
-        component: () => import('../components/fakeIndex.vue'),
+        component: () => import('../components/IndexMain.vue'),
     },
     {
         path: '/login',
@@ -16,18 +16,12 @@ const commonRoutes = [
         meta: { title: '登录' },
         component: () => import('../components/Login.vue'),
     },
-    {
-        path: '/other', // 点击侧边栏跳到一个单独的路由页面，需要定义，层级和其他顶级路由一样
-        name: 'other',
-        meta: { title: '单独的路由' },
-        component: () => import('../views/Other.vue'),
-    },
-    {
-        path: '/other', // 点击侧边栏跳到一个单独的路由页面，需要定义，层级和其他顶级路由一样
-        name: 'other1',
-        meta: { title: '单独的路由1' },
-        component: () => import('../views/Other.vue'),
-    },
+    // {
+    //     path: '/other', // 点击侧边栏跳到一个单独的路由页面，需要定义，层级和其他顶级路由一样
+    //     name: 'other',
+    //     meta: { title: '单独的路由' },
+    //     component: () => import('../views/Other.vue'),
+    // },
     {
         path: '/404',
         name: '404',
@@ -46,8 +40,8 @@ export const asyncRoutes = {
         component: () => import('../views/Home.vue'),
     },
     activityTable: {
-        path: 'activities',
-        name: 'activityTable',
+        path: 'activities', // 在url上显示的
+        name: 'activityTable', // 唯一标识此路由
         meta: { title: '活动列表' },
         component: () => import('../views/Activities.vue'),
     },
@@ -62,6 +56,24 @@ export const asyncRoutes = {
         name: 'auditTable',
         meta: { title: '待审核的活动' },
         component: () => import('../views/AuditTable.vue'),
+    },
+    courseTable: {
+        path: 'courses',
+        name: 'courseTable',
+        meta: { title: '课程列表' },
+        component: () => import('../views/course/course.vue'),
+    },
+    preCourseTable: {
+        path: 'preCourses',
+        name: 'preCourseTable',
+        meta: { title: 'Pre课程列表' },
+        component: () => import('../views/course/course.vue'),
+    },
+    auditCourseTable: {
+        path: 'courseAudit',
+        name: 'auditCourseTable',
+        meta: { title: '待审核的课程' },
+        component: () => import('../views/course/course.vue'),
     },
     password: {
         path: 'password',

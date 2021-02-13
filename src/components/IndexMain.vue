@@ -1,7 +1,12 @@
 <template>
-<div id="fakeIndex" class="center">
-    <div style="height: 90%">
-        首页
+<div id="indexMain" class="center">
+    <div class="main-contain">
+        <Card class="contain-card">
+            <div style="text-align:center">
+                <img src="../assets/imgs/tag.png" class="contain-card-image">
+                <h3>软件工程方法学习笔记</h3>
+            </div>
+        </Card>
     </div>
     <div class="foot">
         <div class="foot-item">互联网ICP备案：
@@ -16,14 +21,29 @@
 
 <script>
 export default {
-    name: 'fadeIndex.vue',
+    name: 'indexMain',
 }
 </script>
 
 <style scoped>
-#fakeIndex{
+#indexMain{
     height: 100vh;
-    background: #409eff;
+    background: #fff;
+}
+.main-contain{
+    height: 90%;
+    color:#515a6e;
+    display:flex;
+}
+.contain-card{
+    width: 25%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    align-self:center;
+}
+.contain-card-image{
+    width: 25%;
 }
 .center {
     height: 100%;
@@ -40,18 +60,19 @@ export default {
     display:inline-block;
     align-items: center;
     vertical-align: middle;
-    color: #fff;
+    color: #999;
 }
 
 div a{
-    color: #fff;
+    color: #999;
 }
 
 div a:hover{
-    color: #e5f3ff;
+    color: #000;
 }
 
 .foot-item{
+        color: #999;
 }
 .sprite{
     -webkit-tap-highlight-color: rgba(0,0,0,0);

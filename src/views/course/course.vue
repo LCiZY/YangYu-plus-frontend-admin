@@ -238,10 +238,10 @@
 
 <script>
 
-import { instance } from '../components/Index'
+import { instance } from '../../components/Index'
 import { get, post } from '@/api'
-import { isNumber } from '../utils/getInfo'
-import { homeDataActivityCount } from './Home'
+import { isNumber } from '../../utils/getInfo'
+
 
 export default {
     name: 'activityTable',
@@ -462,12 +462,11 @@ export default {
         },
     },
     mounted() {
-        this.activityCount = homeDataActivityCount
+        this.queryActivityCount()
         this.queryActivityPageByPage(this.currIndex)
         this.showFilesUrlList = this.$refs.upload.fileList
     },
     methods: {
-        /* eslint-disable */
         changeSearchType(value) {
             this.activitiesDisplay = this.searchResult[value]
         },
@@ -514,6 +513,7 @@ export default {
         },
         refresh() { // 刷新本页面
             instance.reloadPage()
+            this.queryActivityCount()
             this.toPage(this.currIndex)
             this.searchResult = {
                 id: [],
@@ -625,6 +625,18 @@ export default {
                     title: '更改活动信息失败',
                 })
                 self.updateLoading = false
+            })
+        },
+        queryActivityCount() {
+            let self = this
+            get('/activity/queryActivityCount').then(res => {
+                if (isNumber(res)) {
+                    self.activityCount = res
+                } else {
+                    self.activityCount = 100
+                }
+            }).catch((error) => {
+                self.activityCount = 100
             })
         },
         closeModal() {
