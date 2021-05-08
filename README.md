@@ -1,7 +1,6 @@
 # yangyu 后台管理页面
-### [线上地址](https://mumuzi.site:8443/#/home)
-* 若访问的页面不是预期，可在url后加一个/home就行
-### [更新日志](https://github.com/woai3c/vue-admin-template/blob/master/update.md)
+### [点击访问 ➡️ 线上地址](https://mumuzi.site:8443/#/home)
+* 若访问的页面不是预期页面，可在url后加一个/home就行
 ### 相关依赖
 * [vue-router](https://router.vuejs.org/zh/)
 * [iview](https://www.iviewui.com/docs/guide/install)
