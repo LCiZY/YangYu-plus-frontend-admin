@@ -1,4 +1,4 @@
-# yangyu 后台管理页面
+# yangyu 后台管理项目 - 前端页面
 ### [点击访问 ➡️ 线上地址](https://mumuzi.site:8443/#/home)
 * 若访问的页面不是预期页面，可在url后加一个/home就行
 ### 相关依赖
@@ -102,3 +102,6 @@ publicPath: './',
 
 ## License
 MIT
+
+# 其他说明
+### 本项目在[vue-admin-template](https://github.com/woai3c/vue-admin-template)项目基础上定制修改而来
