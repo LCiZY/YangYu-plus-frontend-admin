@@ -1,5 +1,5 @@
 # yangyu 后台管理项目 - 前端页面
-### [点击访问 ➡️ 线上地址](https://mumuzi.site:8443/#/home)
+### [点击访问 ➡️ 线上地址]()
 * 若访问的页面不是预期页面，可在url后加一个/home就行
 ### 相关依赖
 * [vue-router](https://router.vuejs.org/zh/)
