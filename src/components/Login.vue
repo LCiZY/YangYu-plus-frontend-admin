@@ -58,9 +58,10 @@ export default {
         submit() {
             let self = this
             this.isShowLoading = true
-            get('admin/adminLogin', {
-                params: { adminId: this.account, adminPassword: this.pwd },
-            }).then(res => {
+            let form = new FormData()
+            form.append('adminId', this.account)
+            form.append('adminPassword', this.pwd)
+            post('admin/login', form).then(res => {
                 if (res === 'authorization fail') {
                     this.pwdError = '用户名或密码错误'
                     this.isShowLoading = false
@@ -86,12 +87,14 @@ export default {
                         localStorage.setItem('userImg', 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1658123300,1268380095&fm=26&gp=0.jpg')
                         self.$router.push({ path: self.redirect || '/home' })
                     }).catch((error) => {
+                        console.log(error)
                         console.log('获取个人信息失败')
                         this.isShowLoading = false
                     })
                 }
             }).catch((error) => {
                 this.pwdError = '登陆失败:网络错误'
+                 console.log(error)
                 this.isShowLoading = false
             })
         },

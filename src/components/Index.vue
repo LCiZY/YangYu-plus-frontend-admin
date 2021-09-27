@@ -4,8 +4,7 @@
         <aside :class="asideClassName">
             <!-- logo -->
             <div class="logo-c">
-                <img src="../assets/imgs/logo.png" alt="logo" class="logo">
-                <span v-show="isShowAsideTitle">后台管理系统</span>
+                <span v-show="isShowAsideTitle">洋芋+后台管理系统</span>
             </div>
             <!-- 菜单栏 -->
             <Menu class="menu" ref="asideMenu" theme="dark" width="100%" @on-select="selectMenuCallback"
@@ -567,7 +566,7 @@ aside {
     justify-content: center;
 }
 .logo {
-    width: 40px;
+    width: 80px;
     margin-right: 10px;
 }
 .aside-big {
@@ -700,13 +699,11 @@ a {
 /* 主要内容区域 */
 .main-content {
     height: calc(100% - 88px);
-    overflow: hidden;
+    overflow-y: scroll;
 }
 .view-c {
     position: relative;
     height: 100%;
-    overflow: hidden;
-    background:#eee;
 }
 
 .pointer {

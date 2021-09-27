@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { get } from '@/api'
+import { post } from '@/api'
 
 export default {
     name: 'userinfo',
@@ -38,9 +38,10 @@ export default {
                 return
             }
             this.oldName = this.adminInfo.adminName
-            get('/admin/updateAdmin', {
-                params: { adminId: this.adminInfo.adminId, adminName: this.adminInfo.adminName },
-            }).then(res => {
+            let form = new FormData()
+            form.append('adminId', this.adminInfo.adminId)
+            form.append('adminName', this.adminInfo.adminName)
+            post('/admin/update', form).then(res => {
                 if (res === 'success') {
                     this.$Message.success('修改成功~')
                 } else {

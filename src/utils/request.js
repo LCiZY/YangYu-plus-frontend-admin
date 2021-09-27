@@ -6,7 +6,7 @@ import { resetTokenAndClearUser } from '@/utils'
 import { isLocalIp } from '@/utils/getInfo'
 
 
-const serverUrl = 'https://www.mumuzi.site:8443'
+const serverUrl = 'https://api.mumuzi.site'
 const service = axios.create({
     baseURL: isLocalIp(window.location.origin) ? window.location.origin : serverUrl,
     timeout: 60000,

@@ -45,6 +45,7 @@ li {
 }
 #app {
     height: 100%;
+    overflow-y: scroll;
 }
 /* loading */
 .global-loading {
@@ -69,5 +70,17 @@ li {
 }
 #activity .ivu-modal-body{
     padding: 0!important;
+}
+
+.query-c {
+  display: flex;
+  justify-content: space-between;
+}
+.refresh-btn {
+  margin-top: auto;
+}
+#course > div > div.ivu-table-wrapper.ivu-table-wrapper-with-border > div.ivu-table.ivu-table-small.ivu-table-border > div.ivu-table-body.ivu-table-overflowX > table > tbody > tr.inactive-table-info-row>td {
+  /* background: #f3efef!important; */
+  color: rgba(40, 40, 40, 0.5)
 }
 </style>

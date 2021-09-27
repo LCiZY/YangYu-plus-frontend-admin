@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { get } from '@/api'
+import { post } from '@/api'
 
 export default {
     name: 'password',
@@ -55,16 +55,18 @@ export default {
                 return
             }
             let self = this
-            get('/admin/updateAdmin', {
-                params: { adminId: this.adminInfo.adminId, adminPassword: this.formInline.password1 },
-            }).then(res => {
+            let form = new FormData()
+            form.append('adminId', this.adminInfo.adminId)
+            form.append('adminPassword', this.formInline.password1)
+            post('/admin/update', form).then(res => {
                 if (res === 'success') {
-                    this.$Message.success('修改成功~')
+                    self.$Message.success('修改成功~')
                 } else {
-                    this.$Message.error('修改失败')
+                    self.$Message.error('修改失败')
                 }
             }).catch((error) => {
-                this.$Message.error('修改失败')
+                console.log("error:", error)
+                self.$Message.error('修改失败')
             })
         },
     },
