@@ -522,7 +522,7 @@ export default {
           });
         // eslint-disable-next-line no-empty
       } else if (this.searchType === "name") {
-        get("/course/queryCompleteCourseByNameDescKeyword", {
+        get("/course/queryCourseByNameDescKeyword", {
           params: {
             keyword: this.searchContent,
             start: this.searchResult.name.length,
@@ -540,7 +540,7 @@ export default {
           });
       } else if (this.searchType === "type") {
         // 根据类型查询queryCourseByType
-        get("/course/queryCompleteCourseByType", {
+        get("/course/queryCourseByType", {
           params: {
             courseType: this.searchContent,
             start: this.searchResult.type.length,
@@ -587,7 +587,7 @@ export default {
       let startIndex = (index - 1) * this.pageSize;
       let self = this;
       this.tableDataLoading = true;
-      get("/course/queryCompleteCoursePageByPage", {
+      get("/course/queryCoursePageByPage", {
         params: { start: startIndex, number: self.pageSize },
       })
         .then((res) => {

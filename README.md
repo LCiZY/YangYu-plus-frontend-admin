@@ -1,16 +1,43 @@
 # yangyu 后台管理项目 - 前端页面
-### [点击访问 ➡️ 线上地址]()
+### [点击访问 ➡️ 线上地址](https://admin.mumuzi.site/#/login)
 * 若访问的页面不是预期页面，可在url后加一个/home就行
-### 相关依赖
+
+## 开发环境&工具
+```
+nodejs
+npm
+```
+
+## 开发步骤
+1. 进入项目文件夹后使用npm安装依赖
+```
+npm i
+```
+2. 本地调试
+```
+npm run serve
+```
+3. 打包生成`dist`文件夹
+````
+npm run build
+````
+> 打包后的文件不能放在服务器根目录，否则会出现空白页面。
+> 如果确实要把文件放在服务器根目录则需要更改打包的路径，打开 `vue.config.js` 文件，将`publicPath: './',`删去即可。
+
+4. 将生成的`dist`文件夹通过vscode插件上传到服务器，部署调试（可选）
+- 教程:
+- [vscode sftp插件使用]()
+- [部署vue项目](https://mumuzi.site/note.%2Fnotes%2F%E5%89%8D%E7%AB%AF%2Fvue%2Flinux%E9%83%A8%E7%BD%B2vue3.x%E9%A1%B9%E7%9B%AE%E5%B9%B6%E4%BD%BF%E7%94%A8nginx%E8%AE%BF%E9%97%AE.md)
+
+
+## 其他
+### 本项目相关依赖
 * [vue-router](https://router.vuejs.org/zh/)
 * [iview](https://www.iviewui.com/docs/guide/install)
 * [axios](https://www.kancloud.cn/yunye/axios/234845)
 * [vuex](https://vuex.vuejs.org/zh/)
 
 ### 功能
-
-#### 登录页
-* 一周七天自动切换不同的壁纸（建议自己配置）
 
 #### 标签栏
 * 点击标签切换页面
@@ -33,75 +60,13 @@ export default {
 }
 ```
 
-#### 侧边栏
-* 伸展/收缩
-* 页面宽度过小自动收缩
-* 多级菜单（利用iView组件）
-
-#### 用户相关
-* 消息通知
-* 用户头像
-* 基本资料
-
-#### 动态菜单栏
-* 根据数据动态生成菜单
-* 在菜单项上添加 hidden 属性可以隐藏该菜单项，但还是可以正常访问页面，具体请看 DEMO 及其相关代码
-
-#### 面包屑
-* 展示当前页面的路径
-
 #### 权限控制
 * 如果在未登陆的情况下访问指定页面 将会重定向到登陆页
 
-#### [eslint + vscode 自动格式化代码](https://github.com/woai3c/Front-end-articles/blob/master/eslint-vscode-format.md)
-具体配置方法请点击上面的链接，如果不需要 eslint，请将相关依赖卸载以及根目录下的 `.eslintrc.js` 删除。
-
-#### [jest 单元测试](https://vue-test-utils.vuejs.org/zh/guides/testing-single-file-components-with-jest.html)
-如果不需要，请卸载相关依赖及删除根目录下的 `tests` 目录
 
 #### 页面标题 `document.title`
-在 `src/utils/index` 下可设置默认的 `title`，在每个路由配置项上可设置对应的 `title`，具体示例请看代码
+- 在 `src/utils/index` 下可设置默认的 `title`，在每个路由配置项上可设置对应的 `title`，具体示例请看代码
 
 #### 其它
 * 利用`axios`拦截器 实现了`ajax`请求前展示`loading` 请求结束关闭`loading`
-
-### 注意
-* 源码可见 并且添加了必要的注释 可以自行更改
-
-
-`Index`组件一般情况下只需要传数据就行 其他不用关注
-
-市面上有大量的vue后台管理系统模板 但是功能都太丰富了 而且有很多组件用不上 所以写了这么一个最基础的 只有必要功能的模板
-UI库使用的是`iView` 有大量的组件可用 
-
-### 使用
-#### 下载
-```
-git clone https://github.com/woai3c/vue-admin-template.git
-
-cd vue-admin-template
-
-npm i
-```
-
-#### 开发
-```
-npm run serve
-```
-
-#### 打包
-````
-npm run build
-````
-打包后的文件不能放在服务器根目录，否则会出现空白页面。
-
-如果确实要把文件放在服务器根目录则需要更改打包的路径，打开 `vue.config.js` 文件，将如下代码删去即可。
-```js
-publicPath: './',
-```
-
-## License
-MIT
-
-# 其他说明
-### 本项目在[vue-admin-template](https://github.com/woai3c/vue-admin-template)项目基础上定制修改而来
+* UI库使用的是`iView` 有大量的组件可用 
