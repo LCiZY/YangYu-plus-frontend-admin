@@ -8,6 +8,10 @@ import 'view-design/dist/styles/iview.css'
 import './permission'
 import ECharts from 'vue-echarts'
 import { use } from 'echarts/core'
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
+
+
 
 // import ECharts modules manually to reduce bundle size
 import {
@@ -32,6 +36,11 @@ Vue.component('v-chart', ECharts)
 
 Vue.config.productionTip = false
 Vue.use(ViewUI)
+Vue.use(Viewer, {
+    defaultOptions: {
+      zIndex: 9999
+    }
+})
 
 Vue.prototype.$axios = axios
 

@@ -61,8 +61,8 @@
         <Icon type="ios-information-circle"></Icon>
         <span>{{
           chooseAuditRequest.operType === "0"
-            ? "待审核的新增课程"
-            : "待审核修改后的课程"
+            ? "待审核的课程（新增）"
+            : "待审核的课程（修改）"
         }}</span>
       </p>
       <div class="demo-split" style="background: #eee; padding: 10px">
@@ -133,6 +133,11 @@
             <p>{{ chooseCourse.version }}</p>
             <h3>课程售卖属性</h3>
             <p>{{ chooseCourse.courseSaleProperty }}</p>
+            <h3>课程图片</h3>
+            <p v-if="this.chooseCourseImages.length == 0">无</p>
+            <viewer :images="this.chooseCourseImages">
+              <img style="width:100%;cursor: pointer;" title="点击查看大图" v-for="src in chooseCourseImages" :src="src" :key="src.index">
+            </viewer>
           </Card>
         </div>
       </div>
@@ -160,37 +165,34 @@ import { instance } from "../../components/Index";
 import { get } from "@/api";
 import { getTimeFromUnix } from "../../utils/getInfo";
 import { homeDataAuditingCourseCount } from "../Home";
+import { isNumber } from "../../utils/getInfo";
 
 export default {
   name: "auditCourse",
   data() {
     return {
       searchContent: "",
-      searchType: "id",
+      searchType: "aid",
       searchTypeList: [
+        {
+          value: "aid",
+          label: "根据审核id查询",
+        },
         {
           value: "id",
           label: "根据课程id查询",
         },
-        {
-          value: "name",
-          label: "根据课程名称查询",
-        },
-        {
-          value: "type",
-          label: "根据课程类型查询",
-        },
       ],
       searchResult: {
         id: [],
-        name: [],
-        type: [],
+        aid: [],
       },
       tableDataLoading: false,
       auditingCourses: [],
       auditingCoursesDisplayed: [],
       chooseAuditRequest: {},
       chooseCourse: {},
+      chooseCourseImages: [],
       chooseUserInfo: {},
       courseInfoModal: false,
       splitLeft: 0.5,
@@ -272,6 +274,8 @@ export default {
                       this.chooseCourse.courseDDLDate = getTimeFromUnix(
                         this.chooseCourse.courseDDLDate
                       );
+                      if(this.chooseCourse.courseImageUrls)
+                        this.chooseCourseImages = JSON.parse(this.chooseCourse.courseImageUrls)
                       console.log("parsed course:", this.chooseCourse);
                     },
                   },
@@ -347,19 +351,14 @@ export default {
       // 按类型搜索
       let self = this;
       self.tableDataLoading = true;
-      let id = 0;
-      if (
-        this.searchType === "根据课程ID查询" ||
-        this.searchType === "根据审核ID查询"
-      ) {
-        id = parseInt(this.searchContent - 0);
-        if (isNaN(id)) {
-          this.$Message.error("非法的ID值！");
-          return;
-        }
+      if (!isNumber(this.searchContent)) {
+        this.$Message.error("非法的ID值！");
+        self.tableDataLoading = false;
+        return;
       }
-      if (this.searchType === "根据审核ID查询")
-        get("/course/queryAuditCourseRequestById", {
+
+      if (this.searchType === "aid")
+        get("/course4a/queryAuditCourseRequestById", {
           params: { auditRequestId: this.searchContent },
         })
           .then((res) => {
@@ -372,8 +371,8 @@ export default {
             self.tableDataLoading = false;
           });
 
-      if (this.searchType === "根据课程ID查询")
-        get("/course/queryAuditCourseRequestByCourseId", {
+      if (this.searchType === "id")
+        get("/course4a/queryAuditCourseRequestByCourseId", {
           params: { courseId: this.searchContent },
         })
           .then((res) => {
@@ -385,20 +384,7 @@ export default {
             console.log("查询失败");
             self.tableDataLoading = false;
           });
-
-      if (this.searchType === "根据课程名称查询")
-        get("/course/queryAuditCourseRequestByCourseName", {
-          params: { courseName: this.searchContent },
-        })
-          .then((res) => {
-            console.log(res);
-            self.auditingCoursesDisplayed = [res];
-            self.tableDataLoading = false;
-          })
-          .catch((error) => {
-            console.log("查询失败");
-            self.tableDataLoading = false;
-          });
+     
     },
     refresh() {
       // 刷新本页面

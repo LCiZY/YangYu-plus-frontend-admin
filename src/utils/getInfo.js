@@ -5,7 +5,7 @@ export function getKey(id, token) {
 
 export function isNumber(value) {
     // eslint-disable-next-line radix
-    if (!value) return false
+    if (value == null || value == undefined) return false
     if (typeof value === 'number') return true
     if (typeof value !== 'string') return false
     var i = 0

@@ -1,5 +1,5 @@
 {
-  "name": "vue-admin-template",
+  "name": "yangyu-admin",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,10 @@
     "axios": "^0.21.1",
     "core-js": "^3.4.3",
     "echarts": "^5.2.1",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^3.3.0",
+    "v-viewer": "^1.6.4",
     "view-design": "^4.0.2",
     "vue": "^2.6.10",
     "vue-echarts": "^6.0.0",
