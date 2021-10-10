@@ -5,42 +5,65 @@
   >
     <div style="background: #fff; border-radius: 8px; padding: 20px">
       <div class="query-c">
-        <Form :model="searchFormItem" :label-width="120" inline :rules="ruleValidate">
+        <Form
+          :model="searchFormItem"
+          :label-width="120"
+          inline
+          :rules="ruleValidate"
+        >
           <FormItem label="课程ID">
-              <Input v-model="searchFormItem.courseId" placeholder="选填"></Input>
+            <Input v-model="searchFormItem.courseId" placeholder="选填"></Input>
           </FormItem>
           <FormItem label="商家ID" prop="merchantId">
-              <Input v-model="searchFormItem.merchantId" placeholder="选填"></Input>
+            <Input
+              v-model="searchFormItem.merchantId"
+              placeholder="选填"
+            ></Input>
           </FormItem>
           <FormItem label="课程关键字">
-              <Input v-model="searchFormItem.courseKeyword" placeholder="选填"></Input>
+            <Input
+              v-model="searchFormItem.courseKeyword"
+              placeholder="选填"
+            ></Input>
           </FormItem>
           <FormItem label="课程类型">
             <treeSelect
-            :optionList="typeOptionList"
-            :value="searchFormItem.courseType"
-            @change="(s)=>{searchFormItem.courseType = s}"
-            :operateVisiable="false"
+              :optionList="typeOptionList"
+              :value="searchFormItem.courseType"
+              @change="
+                (s) => {
+                  searchFormItem.courseType = s;
+                }
+              "
+              :operateVisiable="false"
             ></treeSelect>
           </FormItem>
           <FormItem label="课程状态">
-              <Select v-model="searchFormItem.courseStatus">
-                  <Option value="-1">所有</Option>
-                  <Option value="0">草稿状态（无线上版本，创建时存为草稿）</Option>
-                  <Option value="1">初始状态（无线上版本，初次审核）</Option>
-                  <Option value="2">审核状态（有线上版本，修改后正在审核）</Option>
-                  <Option value="3">在线状态</Option>
-                  <Option value="4">离线状态（商家将课程下架）</Option>
-                  <Option value="5">离线状态（被管理员封禁）</Option>
-              </Select>
+            <Select v-model="searchFormItem.courseStatus">
+              <Option value="-1">所有</Option>
+              <Option value="0">草稿状态（无线上版本，创建时存为草稿）</Option>
+              <Option value="1">初始状态（无线上版本，初次审核）</Option>
+              <Option value="2">审核状态（有线上版本，修改后正在审核）</Option>
+              <Option value="3">在线状态</Option>
+              <Option value="4">离线状态（商家将课程下架）</Option>
+              <Option value="5">离线状态（被管理员封禁）</Option>
+            </Select>
           </FormItem>
         </Form>
         <span class="search-btn-group">
-           <Button type="primary" icon="ios-search" class="margin3" @click="search(0,pageSize)" :loading="tableDataLoading">
-             <span v-if="!tableDataLoading">搜索</span>
-             <span v-else>Loading...</span>
-           </Button>
-           <Button icon="ios-refresh" class="margin3" @click="resetSearchForm">重置</Button>
+          <Button
+            type="primary"
+            icon="ios-search"
+            class="margin3"
+            @click="search(0, pageSize)"
+            :loading="tableDataLoading"
+          >
+            <span v-if="!tableDataLoading">搜索</span>
+            <span v-else>Loading...</span>
+          </Button>
+          <Button icon="ios-refresh" class="margin3" @click="resetSearchForm"
+            >重置</Button
+          >
           <Button
             type="success"
             :loading="tableDataLoading"
@@ -52,7 +75,6 @@
             <span v-else>Loading...</span>
           </Button>
         </span>
-       
       </div>
       <br />
       <Table
@@ -142,7 +164,13 @@
             <h3>课程图片</h3>
             <p v-if="this.chooseCourseImages.length == 0">无</p>
             <viewer :images="this.chooseCourseImages">
-              <img style="width:100%;cursor: pointer;" title="点击查看大图" v-for="src in chooseCourseImages" :src="src" :key="src.index">
+              <img
+                style="width: 100%; cursor: pointer"
+                title="点击查看大图"
+                v-for="src in chooseCourseImages"
+                :src="src"
+                :key="src.index"
+              />
             </viewer>
           </Card>
         </div>
@@ -186,7 +214,7 @@ import { instance } from "../../components/Index";
 import { get, post } from "@/api";
 import { getTimeFromUnix } from "../../utils/getInfo";
 import { isNumber } from "../../utils/getInfo";
-import treeSelect from '../../components/treeSelect.vue'
+import treeSelect from "../../components/treeSelect.vue";
 
 let courseStatusCode2StatusText = {
   0: "draft(草稿状态)",
@@ -205,35 +233,41 @@ let courseStatusCode2LightColor = {
   4: "rgba(40, 40, 40, 0.5)",
   5: "rgba(40, 40, 40, 0.5)",
 };
- const validatePhoneNumber = (rule, value, callback) => {
-    let reg =/^[1-9]{1}\d{10}$/; // 检验规则为正则，可自行百度。
-    if(reg.test(value)){
-        callback();
-    }else {
-        return callback(new Error("商家id格式错误"));
-    }
+const validatePhoneNumber = (rule, value, callback) => {
+  let reg = /^[1-9]{1}\d{10}$/; // 检验规则为正则，可自行百度。
+  if (reg.test(value)) {
+    callback();
+  } else {
+    return callback(new Error("商家id格式错误"));
+  }
 };
 
 export default {
   components: {
-    treeSelect
+    treeSelect,
   },
   name: "courseTable",
   data() {
     return {
       searchCourses: [],
       originalSearchFormItem: {
-        courseStatus: '-1',
-        courseId: '',
-        merchantId: '',
-        courseKeyword: '',
-        courseType:'所有',
+        courseStatus: "-1",
+        courseId: "",
+        merchantId: "",
+        courseKeyword: "",
+        courseType: "所有",
       },
-      searchFormItem:{},
+      searchFormItem: {},
       typeOptionList: [],
-      
-      ruleValidate:{
-        merchantId: [{ validator:validatePhoneNumber, message: '商家id格式错误', trigger: 'change' }],
+
+      ruleValidate: {
+        merchantId: [
+          {
+            validator: validatePhoneNumber,
+            message: "商家id格式错误",
+            trigger: "change",
+          },
+        ],
       },
 
       tableDataLoading: false,
@@ -246,7 +280,7 @@ export default {
       pageSize: 10, // 每次请求课程的数量
       currIndex: 1, // 当前页面的索引，初始是第一页
       chooseCourse: {}, // 当前选择的课程
-      chooseCourseImages:[],
+      chooseCourseImages: [],
       chooseCourseDeletedIndex: -1, // 当前选择的课程在本页的索引
       chooseUserInfo: {}, // 当前选择的课程所属用户的信息
       splitLeft: 0.4, // 课程信息的模态框左半边宽度的初始比重
@@ -276,10 +310,35 @@ export default {
           resizable: true,
           width: 180,
           render: (h, params) =>
-            h("div", {style:{textAlign: 'center',display: 'flex',justifyContent: 'space-between', alignItems: 'center'}},[
-              h("strong", {style: {fontSize: '50px', cursor: 'default', color: courseStatusCode2LightColor[params.row.courseStatus]}}, "·"),
-              h("strong", courseStatusCode2StatusText[params.row.courseStatus]),
-            ]),
+            h(
+              "div",
+              {
+                style: {
+                  textAlign: "center",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                },
+              },
+              [
+                h(
+                  "strong",
+                  {
+                    style: {
+                      fontSize: "50px",
+                      cursor: "default",
+                      color:
+                        courseStatusCode2LightColor[params.row.courseStatus],
+                    },
+                  },
+                  "·"
+                ),
+                h(
+                  "strong",
+                  courseStatusCode2StatusText[params.row.courseStatus]
+                ),
+              ]
+            ),
         },
         {
           title: "商家ID",
@@ -353,7 +412,9 @@ export default {
           resizable: true,
           width: 200,
           render: (h, params) =>
-            h("div", [h("strong", getTimeFromUnix(params.row.courseApplyDate))]),
+            h("div", [
+              h("strong", getTimeFromUnix(params.row.courseApplyDate)),
+            ]),
         },
         {
           title: "课程报名截止日期",
@@ -361,7 +422,9 @@ export default {
           resizable: true,
           width: 200,
           render: (h, params) =>
-            h("div", [h("strong", getTimeFromUnix(params.row.courseApplyDDLDate))]),
+            h("div", [
+              h("strong", getTimeFromUnix(params.row.courseApplyDDLDate)),
+            ]),
         },
         {
           title: "开课日期",
@@ -433,7 +496,9 @@ export default {
                     click: () => {
                       this.chooseCourse = params.row;
                       this.courseInfoModal = true;
-                      this.chooseCourseImages = JSON.parse(this.chooseCourse.courseImageUrls)
+                      this.chooseCourseImages = JSON.parse(
+                        this.chooseCourse.courseImageUrls
+                      );
                     },
                   },
                 },
@@ -450,9 +515,7 @@ export default {
                     marginRight: "5px",
                   },
                   on: {
-                    click: () => {
-                      
-                    },
+                    click: () => {},
                   },
                 },
                 "修改"
@@ -482,7 +545,7 @@ export default {
                     type: "warning",
                     size: "small",
                   },
-                   style: {
+                  style: {
                     marginRight: "5px",
                   },
                   on: {
@@ -514,14 +577,12 @@ export default {
             ]),
         },
       ],
-      
     };
   },
   watch: {
     $route: {
       handler(route) {
-        console.log("route.params");
-        console.log(route.params);
+        // console.log("route.params",route.params);
       },
       immediate: true,
     },
@@ -529,8 +590,8 @@ export default {
   mounted() {
     this.queryCourseCount();
     this.queryCoursePageByPage(this.currIndex);
-    this.queryCourseCatalog()
-    this.resetSearchForm()
+    this.queryCourseCatalog();
+    this.resetSearchForm();
   },
   methods: {
     rowClassName(row, index) {
@@ -540,9 +601,13 @@ export default {
       return "";
     },
     search(start, number) {
-      if (JSON.stringify(this.searchFormItem) === JSON.stringify(this.originalSearchFormItem)) { // 没有设置搜索条件
-        this.toPage(this.currIndex)
-        return
+      if (
+        JSON.stringify(this.searchFormItem) ===
+        JSON.stringify(this.originalSearchFormItem)
+      ) {
+        // 没有设置搜索条件
+        this.toPage(this.currIndex);
+        return;
       }
       let self = this;
       self.tableDataLoading = true;
@@ -553,8 +618,12 @@ export default {
           params: { courseId: this.searchFormItem.courseId },
         })
           .then((res) => {
-            console.log(res);
-            self.coursesDisplay = [res];
+            console.log("search resp:", res);
+            if (res && res != "") {
+              self.coursesDisplay = [res];
+            } else {
+              self.coursesDisplay = [];
+            }
             self.tableDataLoading = false;
           })
           .catch((error) => {
@@ -562,33 +631,56 @@ export default {
             self.tableDataLoading = false;
           });
       } else {
-        if(!isNumber(start) || !isNumber(number)){
-          console.error("start,number:", start, number)
+        if (!isNumber(start) || !isNumber(number)) {
+          console.error("start,number:", start, number);
           self.tableDataLoading = false;
-          return
+          return;
         }
-        let params = {}
-        let merchantId = this.searchFormItem.merchantId&&this.searchFormItem.merchantId!=this.originalSearchFormItem.merchantId?this.searchFormItem.merchantId:null
-        if(merchantId != null) {
-          params.merchantId = merchantId
-          if(!isNumber(params.merchantId))
-            return
+        let params = {};
+        let merchantId =
+          this.searchFormItem.merchantId &&
+          this.searchFormItem.merchantId !=
+            this.originalSearchFormItem.merchantId
+            ? this.searchFormItem.merchantId
+            : null;
+        if (merchantId != null) {
+          params.merchantId = merchantId;
+          if (!isNumber(params.merchantId)) return;
         }
-        let courseStatus = this.searchFormItem.courseStatus&&this.searchFormItem.courseStatus!=this.originalSearchFormItem.courseStatus?this.searchFormItem.courseStatus:null
-        if(courseStatus != null) params.courseStatus = courseStatus
-        let courseKeyword = this.searchFormItem.courseKeyword&&this.searchFormItem.courseKeyword!=this.originalSearchFormItem.courseKeyword?this.searchFormItem.courseKeyword:null
-        if(courseKeyword != null) params.courseKeyword = courseKeyword
-        let courseType = this.searchFormItem.courseType&&this.searchFormItem.courseType!=this.originalSearchFormItem.courseType?this.searchFormItem.courseType:null
-        if(courseType != null) params.courseType = courseType
-        params.start = start
-        params.number = number
+        let courseStatus =
+          this.searchFormItem.courseStatus &&
+          this.searchFormItem.courseStatus !=
+            this.originalSearchFormItem.courseStatus
+            ? this.searchFormItem.courseStatus
+            : null;
+        if (courseStatus != null) params.courseStatus = courseStatus;
+        let courseKeyword =
+          this.searchFormItem.courseKeyword &&
+          this.searchFormItem.courseKeyword !=
+            this.originalSearchFormItem.courseKeyword
+            ? this.searchFormItem.courseKeyword
+            : null;
+        if (courseKeyword != null) params.courseKeyword = courseKeyword;
+        let courseType =
+          this.searchFormItem.courseType &&
+          this.searchFormItem.courseType !=
+            this.originalSearchFormItem.courseType
+            ? this.searchFormItem.courseType
+            : null;
+        if (courseType != null) params.courseType = courseType;
+        params.start = start;
+        params.number = number;
 
         get("/course4a/queryCourses", {
-          params
+          params,
         })
           .then((res) => {
-            self.searchCourses[start/self.pageSize + 1] = res
-            self.coursesDisplay = res
+            if (res && res != "") {
+              self.coursesDisplay = res;
+              self.searchCourses[start / self.pageSize + 1] = res;
+            } else {
+              self.coursesDisplay = [];
+            }
             self.tableDataLoading = false;
           })
           .catch((error) => {
@@ -600,34 +692,38 @@ export default {
     refresh() {
       // 刷新本页面
       instance.reloadPage();
-      this.searchCourses = []
-      this.courses = []
+      this.searchCourses = [];
+      this.courses = [];
       this.queryCourseCount();
       this.toPage(this.currIndex);
     },
     toPage(index) {
       // 查看第 index 页的课程 index=1，2，3。。
       this.currIndex = index;
-      if (JSON.stringify(this.searchFormItem) === JSON.stringify(this.originalSearchFormItem)) { // 没有设置搜索条件
+      if (
+        JSON.stringify(this.searchFormItem) ===
+        JSON.stringify(this.originalSearchFormItem)
+      ) {
+        // 没有设置搜索条件
         if (!this.courses[index]) {
           this.queryCoursePageByPage(index);
         } else {
           this.coursesDisplay = this.courses[index];
         }
-      } else { // 设置了搜索条件
+      } else {
+        // 设置了搜索条件
         if (!this.searchCourses[index]) {
-          this.search(this.pageSize*(index-1), this.pageSize)
+          this.search(this.pageSize * (index - 1), this.pageSize);
         } else {
           this.coursesDisplay = this.searchCourses[index];
         }
       }
-      
     },
     pageSizeChange(size) {
       this.pageSize = size;
     },
-    queryCourseCatalog(){
-      let self = this
+    queryCourseCatalog() {
+      let self = this;
       get("/course4c/queryCourseCatalog")
         .then((res) => {
           self.typeOptionList = res;
@@ -738,8 +834,10 @@ export default {
       this.updateModal = false;
       this.deactivateCourseModal = false;
     },
-    resetSearchForm(){
-      this.searchFormItem = JSON.parse(JSON.stringify(this.originalSearchFormItem))
+    resetSearchForm() {
+      this.searchFormItem = JSON.parse(
+        JSON.stringify(this.originalSearchFormItem)
+      );
     },
     show(index) {
       // 显示调试信息，测试用
@@ -756,7 +854,7 @@ export default {
 
 
 <style scoped>
-.search-btn-group{
+.search-btn-group {
   display: grid;
   align-content: space-around;
 }
@@ -790,7 +888,7 @@ export default {
 .ivu-modal-footer {
   border: none;
 }
-.margin3{
+.margin3 {
   margin-bottom: 3px;
 }
 

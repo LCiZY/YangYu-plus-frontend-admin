@@ -725,9 +725,6 @@ export default {
     .ivu-modal-footer {
         border: none;
     }
-    .demo-upload-list{
-
-    }
 
     .demo-upload-list{
         display: inline-block;

@@ -515,9 +515,9 @@ export default {
 
     .login-vue .ivu-input {
         background-color: transparent;
-        color: #fff;
+        color: #000;
         outline: #fff;
-        border-color: #fff;
+        border-color: #eee;
     }
 
     .login-vue ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
