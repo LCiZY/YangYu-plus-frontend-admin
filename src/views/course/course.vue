@@ -660,7 +660,7 @@ export default {
             this.originalSearchFormItem.courseKeyword
             ? this.searchFormItem.courseKeyword
             : null;
-        if (courseKeyword != null) params.courseKeyword = courseKeyword;
+        if (courseKeyword != null) params.keyword = courseKeyword;
         let courseType =
           this.searchFormItem.courseType &&
           this.searchFormItem.courseType !=

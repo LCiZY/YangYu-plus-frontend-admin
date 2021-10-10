@@ -34,7 +34,6 @@ const store = new Vuex.Store({
                 name: 'activityTable',
                 text: '活动查询',
                 // hidden 属性 隐藏此菜单 可以通过在地址栏上输入对应的 URL 来显示页面
-                // hidden: true,
             },
             {
                 type: 'ios-grid',
