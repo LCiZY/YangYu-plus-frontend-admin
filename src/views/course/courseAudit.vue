@@ -68,14 +68,7 @@
       <div class="demo-split" style="background: #eee; padding: 10px">
         <div slot="left" class="demo-split-pane" style="overflow-y: scroll">
           <Card :bordered="false" style="height: auto !important">
-            <a :href="chooseCourse.courseCoverPicUrl" target="_blank">
-              <img
-                :src="chooseCourse.courseCoverPicUrl"
-                class="image-size"
-                style="float: right"
-              />
-            </a>
-            <h1>课程信息</h1>
+            <Divider class="head">审核信息</Divider>
             <h3>审核请求ID</h3>
             <p>{{ chooseAuditRequest.auditRequestId }}</p>
             <h3>操作类型</h3>
@@ -93,51 +86,8 @@
             <p>{{ chooseAuditRequest.auditRequestTime }}</p>
             <h3>商家ID</h3>
             <p>{{ chooseAuditRequest.merchantId }}</p>
-            <h3>课程ID</h3>
-            <p>{{ chooseCourse.courseId }}</p>
-            <h3>课程名称</h3>
-            <p>{{ chooseCourse.courseName }}</p>
-            <h3>课程类型</h3>
-            <p>{{ chooseCourse.courseType }}</p>
-            <h3>课程地点</h3>
-            <p>{{ chooseCourse.coursePlace }}</p>
-            <h3>课程对象</h3>
-            <p>{{ chooseCourse.courseObject }}</p>
-            <h3>课程适合人群描述</h3>
-            <p>{{ chooseCourse.courseSuitableCrow }}</p>
-            <h3>课程简介</h3>
-            <p>{{ chooseCourse.courseBriefIntro }}</p>
-            <h3>课程简介(视频)</h3>
-            <p>{{ chooseCourse.courseVideoUrl }}</p>
-            <h3>课程售价</h3>
-            <p>{{ chooseCourse.courseSalePrice }}</p>
-            <h3>课程拼团价</h3>
-            <p>{{ chooseCourse.courseGroupSalePrice }}</p>
-            <h3>课程开始报名日期</h3>
-            <p>{{ chooseCourse.courseApplyDate }}</p>
-            <h3>课程报名截止日期</h3>
-            <p>{{ chooseCourse.courseApplyDDLDate }}</p>
-            <h3>开课日期</h3>
-            <p>{{ chooseCourse.courseDate }}</p>
-            <h3>结课日期</h3>
-            <p>{{ chooseCourse.courseDDLDate }}</p>
-            <h3>课程最大人数</h3>
-            <p>{{ chooseCourse.courseMaxNum }}</p>
-            <h3>课程剩余人数</h3>
-            <p>{{ chooseCourse.courseRemainNum }}</p>
-            <h3>课程状态</h3>
-            <p>{{ chooseCourse.courseStatus }}</p>
-            <h3>课程是否软删除</h3>
-            <p>{{ chooseCourse.isDeleted }}</p>
-            <h3>课程数据版本</h3>
-            <p>{{ chooseCourse.version }}</p>
-            <h3>课程售卖属性</h3>
-            <p>{{ chooseCourse.courseSaleProperty }}</p>
-            <h3>课程图片</h3>
-            <p v-if="this.chooseCourseImages.length == 0">无</p>
-            <viewer :images="this.chooseCourseImages">
-              <img style="width:100%;cursor: pointer;" title="点击查看大图" v-for="src in chooseCourseImages" :src="src" :key="src.index">
-            </viewer>
+
+            <courseInfo :chooseCourse="chooseCourse"></courseInfo>
           </Card>
         </div>
       </div>
@@ -166,9 +116,13 @@ import { get } from "@/api";
 import { getTimeFromUnix } from "../../utils/getInfo";
 import { homeDataAuditingCourseCount } from "../Home";
 import { isNumber } from "../../utils/getInfo";
+import courseInfo from "../../components/courseInfo.vue";
 
 export default {
   name: "auditCourse",
+  components: {
+    courseInfo,
+  },
   data() {
     return {
       searchContent: "",
@@ -192,7 +146,6 @@ export default {
       auditingCoursesDisplayed: [],
       chooseAuditRequest: {},
       chooseCourse: {},
-      chooseCourseImages: [],
       chooseUserInfo: {},
       courseInfoModal: false,
       splitLeft: 0.5,
@@ -229,7 +182,14 @@ export default {
           width: 200,
           render: (h, params) =>
             h("div", [
-              h("strong", typeof params.row.auditRequestTime !== 'string'?(params.row.auditRequestTime = getTimeFromUnix(params.row.auditRequestTime)):params.row.auditRequestTime),
+              h(
+                "strong",
+                typeof params.row.auditRequestTime !== "string"
+                  ? (params.row.auditRequestTime = getTimeFromUnix(
+                      params.row.auditRequestTime
+                    ))
+                  : params.row.auditRequestTime
+              ),
             ]),
         },
         {
@@ -274,8 +234,7 @@ export default {
                       this.chooseCourse.courseDDLDate = getTimeFromUnix(
                         this.chooseCourse.courseDDLDate
                       );
-                      if(this.chooseCourse.courseImageUrls)
-                        this.chooseCourseImages = JSON.parse(this.chooseCourse.courseImageUrls)
+
                       console.log("parsed course:", this.chooseCourse);
                     },
                   },
@@ -384,7 +343,6 @@ export default {
             console.log("查询失败");
             self.tableDataLoading = false;
           });
-     
     },
     refresh() {
       // 刷新本页面
@@ -457,9 +415,10 @@ export default {
 </script>
 
 <style scoped>
-.image-size {
-  width: 100px !important;
-  height: 100px !important;
+.head {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: xx-large;
 }
 .demo-split {
   height: 100%;
@@ -482,8 +441,6 @@ export default {
 }
 .ivu-modal-footer {
   border: none;
-}
-.demo-upload-list {
 }
 
 .demo-upload-list {

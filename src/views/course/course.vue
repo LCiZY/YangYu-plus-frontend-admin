@@ -113,65 +113,7 @@
       <div class="demo-split" style="background: #eee; padding: 20px">
         <div slot="left" class="demo-split-pane" style="overflow-y: scroll">
           <Card :bordered="false" style="height: auto !important">
-            <a :href="chooseCourse.courseCoverPicUrl" target="_blank">
-              <img
-                :src="chooseCourse.courseCoverPicUrl"
-                class="image-size"
-                style="float: right"
-              />
-            </a>
-            <h1>课程信息</h1>
-            <h3>课程ID</h3>
-            <p>{{ chooseCourse.courseId }}</p>
-            <h3>课程名称</h3>
-            <p>{{ chooseCourse.courseName }}</p>
-            <h3>课程类型</h3>
-            <p>{{ chooseCourse.courseType }}</p>
-            <h3>课程地点</h3>
-            <p>{{ chooseCourse.coursePlace }}</p>
-            <h3>课程对象</h3>
-            <p>{{ chooseCourse.courseObject }}</p>
-            <h3>课程适合人群描述</h3>
-            <p>{{ chooseCourse.courseSuitableCrowd }}</p>
-            <h3>课程简介</h3>
-            <p>{{ chooseCourse.courseBriefIntro }}</p>
-            <h3>课程简介(视频)</h3>
-            <p>{{ chooseCourse.courseVideoUrl }}</p>
-            <h3>课程售价</h3>
-            <p>{{ chooseCourse.courseSalePrice }}</p>
-            <h3>课程拼团价</h3>
-            <p>{{ chooseCourse.courseGroupSalePrice }}</p>
-            <h3>课程开始报名日期</h3>
-            <p>{{ chooseCourse.courseApplyDate }}</p>
-            <h3>课程报名截止日期</h3>
-            <p>{{ chooseCourse.courseApplyDDLDate }}</p>
-            <h3>开课日期</h3>
-            <p>{{ chooseCourse.courseDate }}</p>
-            <h3>结课日期</h3>
-            <p>{{ chooseCourse.courseDDLDate }}</p>
-            <h3>课程最大名额</h3>
-            <p>{{ chooseCourse.courseMaxNum }}</p>
-            <h3>课程剩余名额</h3>
-            <p>{{ chooseCourse.courseRemainNum }}</p>
-            <h3>课程状态</h3>
-            <p>{{ chooseCourse.courseStatus }}</p>
-            <h3>课程是否软删除</h3>
-            <p>{{ chooseCourse.isDeleted }}</p>
-            <h3>课程数据版本</h3>
-            <p>{{ chooseCourse.version }}</p>
-            <h3>课程售卖属性</h3>
-            <p>{{ chooseCourse.courseSaleProperty }}</p>
-            <h3>课程图片</h3>
-            <p v-if="this.chooseCourseImages.length == 0">无</p>
-            <viewer :images="this.chooseCourseImages">
-              <img
-                style="width: 100%; cursor: pointer"
-                title="点击查看大图"
-                v-for="src in chooseCourseImages"
-                :src="src"
-                :key="src.index"
-              />
-            </viewer>
+            <courseInfo :chooseCourse="chooseCourse"></courseInfo>
           </Card>
         </div>
       </div>
@@ -215,6 +157,7 @@ import { get, post } from "@/api";
 import { getTimeFromUnix } from "../../utils/getInfo";
 import { isNumber } from "../../utils/getInfo";
 import treeSelect from "../../components/treeSelect.vue";
+import courseInfo from "../../components/courseInfo.vue";
 
 let courseStatusCode2StatusText = {
   0: "draft(草稿状态)",
@@ -245,6 +188,7 @@ const validatePhoneNumber = (rule, value, callback) => {
 export default {
   components: {
     treeSelect,
+    courseInfo,
   },
   name: "courseTable",
   data() {
@@ -280,7 +224,6 @@ export default {
       pageSize: 10, // 每次请求课程的数量
       currIndex: 1, // 当前页面的索引，初始是第一页
       chooseCourse: {}, // 当前选择的课程
-      chooseCourseImages: [],
       chooseCourseDeletedIndex: -1, // 当前选择的课程在本页的索引
       chooseUserInfo: {}, // 当前选择的课程所属用户的信息
       splitLeft: 0.4, // 课程信息的模态框左半边宽度的初始比重
@@ -455,6 +398,22 @@ export default {
           width: 180,
         },
         {
+          title: "课程团单最大人数",
+          key: "courseGroupOrderMaxNum",
+          resizable: true,
+          width: 180,
+        },
+        {
+          title: "课程团单持续时间",
+          key: "courseGroupOrderHoldHours",
+          resizable: true,
+          width: 180,
+          render: (h, params) =>
+            h("div", [
+              h("strong", params.row.courseGroupOrderHoldHours + "小时"),
+            ]),
+        },
+        {
           title: "课程是否软删除",
           key: "isDeleted",
           resizable: true,
@@ -496,9 +455,6 @@ export default {
                     click: () => {
                       this.chooseCourse = params.row;
                       this.courseInfoModal = true;
-                      this.chooseCourseImages = JSON.parse(
-                        this.chooseCourse.courseImageUrls
-                      );
                     },
                   },
                 },

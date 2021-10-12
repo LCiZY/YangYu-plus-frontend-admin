@@ -1,35 +1,60 @@
 <template>
-  <div class="tree_select_box row-flex-start" @click="optionBoxVisble = !optionBoxVisble" >
-    <Icon type="ios-arrow-down" class="arrow_icon" :style="{transform:optionBoxVisble?'rotate('+180+'deg)':'rotate('+0+'deg)'}" />
+  <div
+    class="tree_select_box row-flex-start"
+    @click="optionBoxVisble = !optionBoxVisble"
+  >
+    <Icon
+      type="ios-arrow-down"
+      class="arrow_icon"
+      :style="{
+        transform: optionBoxVisble
+          ? 'rotate(' + 180 + 'deg)'
+          : 'rotate(' + 0 + 'deg)',
+      }"
+    />
     <transition name="slide">
       <div class="triangle_up" v-if="optionBoxVisble"></div>
     </transition>
     <transition name="slide">
       <div
         class="option_box column-start-center"
-        :style="{paddingBottom:operateVisiable?'60px':'0px'}"
+        :style="{ paddingBottom: operateVisiable ? '60px' : '0px' }"
         v-if="optionBoxVisble"
         @click.stop
       >
         <div class="option_wrapper">
-          <template v-for="(item,index) in options">
-            <div class="tree_option_banner nowrap" :key="index" @click.stop="optionClick(item)">
+          <template v-for="(item, index) in options">
+            <div
+              class="tree_option_banner nowrap"
+              :key="index"
+              @click.stop="optionClick(item)"
+            >
               <div class="expand_icon_wrapper c_c" v-if="item.children">
-                <Icon type="ios-arrow-down" class="expand_icon" :style="{transform:item.expand?'rotate('+0+'deg)':'rotate('+270+'deg)'}" />
+                <Icon
+                  type="ios-arrow-down"
+                  class="expand_icon"
+                  :style="{
+                    transform: item.expand
+                      ? 'rotate(' + 0 + 'deg)'
+                      : 'rotate(' + 270 + 'deg)',
+                  }"
+                />
               </div>
-              {{item.label}}
+              {{ item.label }}
             </div>
-            <template v-if="item.expand&&item.children">
+            <template v-if="item.expand && item.children">
               <div
                 class="tree_option_banner nowrap"
-                style="color: #606764;"
-                v-for="(it,i) in item.children"
+                style="color: #606764"
+                v-for="(it, i) in item.children"
                 @click.stop="optionClick(it)"
                 :class="{
-              'last_option_banner':i===(item.children.length-1)
-            }"
+                  last_option_banner: i === item.children.length - 1,
+                }"
                 :key="it.label"
-              >{{it.label}}</div>
+              >
+                {{ it.label }}
+              </div>
             </template>
           </template>
         </div>
@@ -43,7 +68,7 @@
         </div>
       </div>
     </transition>
-    {{val}}
+    {{ val }}
   </div>
 </template>
 <script>
@@ -51,51 +76,80 @@ export default {
   props: {
     // 监听值
     value: {
-      type: String
+      type: String,
     },
     // 下拉项列表
     optionList: {
       type: Array,
       default: () => {
         return [];
-      }
+      },
+    },
+    //是否需要全部节点，默认只需要叶子节点
+    needFullNode: {
+      type: Boolean,
+      default: false,
     },
     // 是否展示操作栏
     operateVisiable: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     options() {
-     return  this.optionList.map(x=>{
-       if(x.children)this.$set(x,'expand',false)
-       return x
-     })
-    }
+      return this.optionList.map((x) => {
+        if (x.children) this.$set(x, "expand", false);
+        return x;
+      });
+    },
   },
   data() {
     return {
       val: this.value,
       optionBoxVisble: false,
-       
+      nodes: [],
     };
   },
   // 手动双向绑定
-  watch:{
-    value(n,o){
-      this.val = n
-    }
+  watch: {
+    value(n, o) {
+      this.val = n;
+    },
   },
   methods: {
     optionClick(s) {
       s.expand = !s.expand;
       if (s.children) return;
       // 修改外部组件监听数据
-      this.optionBoxVisble = false
-      this.$emit('change',s.value)
-    }
-  }
+      this.optionBoxVisble = false;
+
+      if (this.needFullNode) {
+        this.nodes = [];
+        this.getFullNode(this.optionList, s.id);
+        console.log(this.nodes);
+        this.$emit("change", this.nodes); //传递根到叶子节点的路径上所有节点的值
+      } else {
+        this.$emit("change", s.value); //传递叶子结点的值
+      }
+    },
+    getFullNode(children, id) {
+      if (!this.needFullNode) return;
+      for (let index = 0; index < children.length; index++) {
+        const item = children[index];
+        this.nodes = this.nodes.concat(item.label);
+        if (item.children) {
+          if (this.getFullNode(item.children, id)) return true;
+        } else {
+          if (item.id === id) {
+            return true;
+          }
+        }
+        this.nodes.pop();
+      }
+      return false;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
